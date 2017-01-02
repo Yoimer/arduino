@@ -42,7 +42,7 @@
 // circuits.io simulator
 #define ROBOT_REMOTE_CIRCUITS_IO 2
 // Philips Mini Tower 
-// note: my Philips Mini Towe - may differ for other models
+// note: my Philips Mini Tower - may differ for other models
 #define ROBOT_REMOTE_PHILIPS 3
 
 /****************************************
@@ -53,7 +53,7 @@
 
 #define ROBOT_REMOTE_SELECTED ROBOT_REMOTE_SONY
 
-#if defined ROBOT_REMOTE_SELECTED == ROBOT_REMOTE_SONY
+#if defined ROBOT_REMOTE_SELECTED && ROBOT_REMOTE_SELECTED == ROBOT_REMOTE_SONY
 
 #define ROBOT_IR_REMOTE_1 0x207BEF0F
 #define ROBOT_IR_REMOTE_2 0xE8455D8E
@@ -67,7 +67,7 @@
 
 #endif
 
-#if defined ROBOT_REMOTE_SELECTED == ROBOT_REMOTE_PHILIPS
+#if defined ROBOT_REMOTE_SELECTED && ROBOT_REMOTE_SELECTED == ROBOT_REMOTE_PHILIPS
 
 #define ROBOT_IR_REMOTE_1 0xC54DA1E5
 #define ROBOT_IR_REMOTE_2 0xDD54FA64
@@ -81,7 +81,7 @@
 
 #endif
 
-#if defined ROBOT_REMOTE_SELECTED == ROBOT_REMOTE_CIRCUITS_IO
+#if defined ROBOT_REMOTE_SELECTED && ROBOT_REMOTE_SELECTED == ROBOT_REMOTE_CIRCUITS_IO
 
 #define ROBOT_IR_REMOTE_1 0xFD08F7
 #define ROBOT_IR_REMOTE_2 0xFD8877
@@ -213,26 +213,19 @@ struct map* find_item_by_code(struct map* map, unsigned long code) {
  *                                      *
  ****************************************/
 
-void move(unsigned char forward, unsigned int delayMs) {
+void move(unsigned char forward) {
+  if (forward) {
+    Serial.println("Moving forward");
+  } else {
+    Serial.println("Moving reverse");
+  }
   digitalWrite(ROBOT_RIGHT_MOTOR_PIN1, forward);
   digitalWrite(ROBOT_RIGHT_MOTOR_PIN2, !forward);
 
   digitalWrite(ROBOT_LEFT_MOTOR_PIN1, forward);
   digitalWrite(ROBOT_LEFT_MOTOR_PIN2, !forward);
 
-  delay(delayMs);  
-}
-
-void forward(unsigned int delayMs) {
-  Serial.println("Forward");
-
-  move(HIGH, delayMs);
-}
-
-void reverse(unsigned int delayMs) {
-  Serial.println("Reverse");
-
-  move(LOW, delayMs);
+  delay(ROBOT_MOVE_LENGHT);  
 }
 
 void stop() {
@@ -246,7 +239,29 @@ void stop() {
 }
 
 
-void turn(float delayMs, unsigned char left, unsigned char right) {
+void turn(short deg) {
+  Serial.print("Turning by ");
+  Serial.println(deg);
+
+  unsigned char left = LOW;
+  unsigned char right = LOW;
+
+  // turning left:
+  // left motor reverses while right one moves forward
+  if (deg < 0) {
+    right = HIGH;
+    deg = -deg;
+  } else {
+    left = HIGH;
+  }
+
+  unsigned short delayMs = (deg / 90.0) * ROBOT_TURN_LENGHT;
+
+  Serial.print("Move will take ");
+  Serial.print(delayMs);
+  Serial.println(" ms");
+
+  
   digitalWrite(ROBOT_LEFT_MOTOR_PIN1, left);
   digitalWrite(ROBOT_LEFT_MOTOR_PIN2, !left);
 
@@ -256,48 +271,31 @@ void turn(float delayMs, unsigned char left, unsigned char right) {
   delay(delayMs);
 }
 
-void left(float delayMs) {
-  Serial.print("Left ");
-  Serial.print(delayMs / ROBOT_TURN_LENGHT * 90);
-  Serial.println(" degrees");
-
-  turn(delayMs, LOW, HIGH);
-}
-
-void right(float delayMs) {
-  Serial.print("Right ");
-  Serial.print(delayMs / ROBOT_TURN_LENGHT * 90);
-  Serial.println(" degrees");
-
-  turn(delayMs, HIGH, LOW);
-
-}
-
-void execute(unsigned long direction) {
+void execute(unsigned char direction) {
   switch (direction) {
     case ROBOT_N:
-      forward(ROBOT_MOVE_LENGHT);
+      move(HIGH);
       break;
     case ROBOT_S:
-      reverse(ROBOT_MOVE_LENGHT);
+      move(LOW);
       break;
     case ROBOT_W:
-      left(ROBOT_TURN_LENGHT);
+      turn(-90);
       break;
     case ROBOT_NW:
-      left(ROBOT_TURN_LENGHT / 2);
+      turn(-45);
       break;
     case ROBOT_SW:
-      left(ROBOT_TURN_LENGHT + ROBOT_TURN_LENGHT / 2);
+      turn(-135);
       break;
     case ROBOT_E:
-      right(ROBOT_TURN_LENGHT);
+      turn(90);
       break;
     case ROBOT_NE:
-      right(ROBOT_TURN_LENGHT / 2);
+      turn(45);
       break;
     case ROBOT_SE:
-      right(ROBOT_TURN_LENGHT + ROBOT_TURN_LENGHT / 2);
+      turn(135);
       break;
   }
   stop();
