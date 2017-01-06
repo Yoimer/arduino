@@ -1,9 +1,11 @@
 #include <IRremote.h>
-#include <SoftwareSerial.h>
 
-#include "robot_api.h"
-#include "lists.h"
-#include "maps.h"
+#include "robot.h"
+#include "list.h"
+#include "map.h"
+
+#include "list.cpp"
+#include "map.cpp"
 
 /****************************************
  *                                      *
@@ -36,7 +38,6 @@ void stop() {
   delay(ROBOT_DELAY_LENGHT);
 }
 
-
 void turn(short deg) {
   Serial.print("Turning by ");
   Serial.println(deg);
@@ -58,7 +59,6 @@ void turn(short deg) {
   Serial.print("Move will take ");
   Serial.print(delayMs);
   Serial.println(" ms");
-
   
   digitalWrite(ROBOT_LEFT_MOTOR_PIN1, left);
   digitalWrite(ROBOT_LEFT_MOTOR_PIN2, !left);
@@ -99,10 +99,10 @@ void execute(unsigned char direction) {
   stop();
 }
 
-void replay_moves(struct node* list) {
-  struct node* tmp = list;
+void replay_moves(struct node<unsigned char>* list) {
+  struct node<unsigned char>* tmp = list;
   while (tmp != NULL) {
-    execute(tmp->direction);
+    execute(tmp->value);
     tmp = tmp->next;
   }
 }
@@ -114,8 +114,10 @@ void replay_moves(struct node* list) {
  ****************************************/
 
 IRrecv irrecv(ROBOT_IR_PIN);
-struct map* codes;
-struct node* directions;
+// key = direction = unsigned char
+// value = code = long
+struct item<unsigned char, unsigned long>* codes;
+struct node<unsigned char>* directions;
 bool programming = 0;
 
 /****************************************
@@ -143,14 +145,14 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  codes = create_map(ROBOT_N, ROBOT_IR_REMOTE_2);
-  add_item(codes, ROBOT_NE, ROBOT_IR_REMOTE_3);
-  add_item(codes, ROBOT_E, ROBOT_IR_REMOTE_6);
-  add_item(codes, ROBOT_SE, ROBOT_IR_REMOTE_9);
-  add_item(codes, ROBOT_S, ROBOT_IR_REMOTE_8);
-  add_item(codes, ROBOT_SW, ROBOT_IR_REMOTE_7);
-  add_item(codes, ROBOT_W, ROBOT_IR_REMOTE_4);
-  add_item(codes, ROBOT_NW, ROBOT_IR_REMOTE_1);
+  codes = create_item((unsigned char)(ROBOT_N), (unsigned long)(ROBOT_IR_REMOTE_2));
+  add_item(codes, (unsigned char)(ROBOT_NE), (unsigned long)(ROBOT_IR_REMOTE_3));
+  add_item(codes, (unsigned char)(ROBOT_E), (unsigned long)(ROBOT_IR_REMOTE_6));
+  add_item(codes, (unsigned char)(ROBOT_SE), (unsigned long)(ROBOT_IR_REMOTE_9));
+  add_item(codes, (unsigned char)(ROBOT_S), (unsigned long)(ROBOT_IR_REMOTE_8));
+  add_item(codes, (unsigned char)(ROBOT_SW), (unsigned long)(ROBOT_IR_REMOTE_7));
+  add_item(codes, (unsigned char)(ROBOT_W), (unsigned long)(ROBOT_IR_REMOTE_4));
+  add_item(codes, (unsigned char)(ROBOT_NW), (unsigned long)(ROBOT_IR_REMOTE_1));
 }
 
 void loop() {
@@ -164,20 +166,20 @@ void loop() {
       } else {
         digitalWrite(LED_BUILTIN, LOW);
         replay_moves(directions);
-        free_list(directions);
+        free_node(directions);
       }
     } else {
-      struct map* item = find_item_by_code(codes, results.value);
+      struct item<unsigned char, unsigned long>* item = find_item_by_value(codes, results.value);
 
       if (item != NULL) {
         if (programming) {
           if (directions == NULL) {
-            directions = create_node(item->direction);
+            directions = create_node(item->key);
           } else {
-            add_node(directions, item->direction);
+            add_node(directions, item->key);
           }
         } else {
-          execute(item->direction);
+          execute(item->key);
         }
       }
     }
