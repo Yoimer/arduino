@@ -1,6 +1,3 @@
-#ifndef robot_ir_h
-#define robot_ir_h
-
 /****************************************
  *                                      *
  * IR Remotes                           *
@@ -8,6 +5,12 @@
  * Based on type different codes used   *
  *                                      *
  ****************************************/
+
+#ifndef robot_ir_h
+#define robot_ir_h
+
+#include "robot.h"
+#include "map.h"
 
 // IR pin
 #define ROBOT_IR_PIN 11
@@ -70,6 +73,19 @@
 #define ROBOT_IR_REMOTE_FUNC 0XFD40BF
 
 #endif
+
+struct item<unsigned char, unsigned long>* getCodes() {
+  struct item<unsigned char, unsigned long>* codes;
+  codes = createItem((unsigned char)(ROBOT_N), (unsigned long)(ROBOT_IR_REMOTE_2));
+  addItem(codes, (unsigned char)(ROBOT_NE), (unsigned long)(ROBOT_IR_REMOTE_3));
+  addItem(codes, (unsigned char)(ROBOT_E), (unsigned long)(ROBOT_IR_REMOTE_6));
+  addItem(codes, (unsigned char)(ROBOT_SE), (unsigned long)(ROBOT_IR_REMOTE_9));
+  addItem(codes, (unsigned char)(ROBOT_S), (unsigned long)(ROBOT_IR_REMOTE_8));
+  addItem(codes, (unsigned char)(ROBOT_SW), (unsigned long)(ROBOT_IR_REMOTE_7));
+  addItem(codes, (unsigned char)(ROBOT_W), (unsigned long)(ROBOT_IR_REMOTE_4));
+  addItem(codes, (unsigned char)(ROBOT_NW), (unsigned long)(ROBOT_IR_REMOTE_1));
+  return codes;
+}
 
 #endif
 

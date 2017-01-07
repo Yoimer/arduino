@@ -12,10 +12,10 @@ template<class T> struct node {
   struct node<T>* next;
 };
 
-template<class T> struct node<T>* create_node(T value);
+template<class T> struct node<T>* createNode(T value);
 
-template<class T> struct node<T>* add_node(struct node<T>* nodes, T value);
+template<class T> struct node<T>* addNode(struct node<T>* head, T value);
 
-template<class T> void free_node(struct node<T>* node);
+template<class T> void freeNode(struct node<T>* head);
 
 #endif

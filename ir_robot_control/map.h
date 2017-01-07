@@ -14,12 +14,12 @@ template<class K, class V> struct item {
 };
 
 
-template<class K, class V> struct item<K, V>* create_item(K key, V value);
+template<class K, class V> struct item<K, V>* createItem(K key, V value);
 
-template<class K, class V> struct item<K, V>* add_item(struct item<K, V>* items, K key, V value);
+template<class K, class V> struct item<K, V>* addItem(struct item<K, V>* items, K key, V value);
 
-template<class K, class V> struct item<K, V>* find_item_by_key(struct item<K, V>* items, K key);
+template<class K, class V> struct item<K, V>* findItemByKey(struct item<K, V>* items, K key);
 
-template<class K, class V> struct item<K, V>* find_item_by_value(struct item<K, V>* items, V value);
+template<class K, class V> struct item<K, V>* findItemByValue(struct item<K, V>* items, V value);
 
 #endif

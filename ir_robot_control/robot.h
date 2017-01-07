@@ -24,7 +24,7 @@
 // 00000001
 #define ROBOT_W 1
 #define ROBOT_NE ROBOT_N | ROBOT_E
-#define ROBOT_NW ROBOT_N | ROBOT_W
+#define ROBOT_NW (ROBOT_N | ROBOT_W)
 #define ROBOT_SE ROBOT_S | ROBOT_E
 #define ROBOT_SW ROBOT_S | ROBOT_W
 // special direction
@@ -48,9 +48,9 @@
 
 class Robot {
   public:
-    bool is_programming();
-    void start_programming();
-    void end_programming();
+    bool isProgramming();
+    void startProgramming();
+    void endProgramming();
     void execute(unsigned char direction);
 
   private:
@@ -59,9 +59,8 @@ class Robot {
     void move(unsigned char forward);
     void stop();
     void turn(short deg);
-    void replay_moves();
+    void replayMoves();
 };
-
 
 #endif
 
