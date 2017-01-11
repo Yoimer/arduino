@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "robot.h"
-#include "list.cpp"
+#include <list.cpp>
 
 /****************************************
  *                                      *
@@ -34,7 +34,7 @@ void Robot::move(unsigned char forward) {
   digitalWrite(ROBOT_LEFT_MOTOR_PIN1, forward);
   digitalWrite(ROBOT_LEFT_MOTOR_PIN2, !forward);
 
-  delay(ROBOT_MOVE_LENGHT);  
+  delay(ROBOT_MOVE_LENGHT);
 }
 
 void Robot::stop() {
@@ -68,7 +68,7 @@ void Robot::turn(short deg) {
   Serial.print("Move will take ");
   Serial.print(delayMs);
   Serial.println(" ms");
-  
+
   digitalWrite(ROBOT_LEFT_MOTOR_PIN1, left);
   digitalWrite(ROBOT_LEFT_MOTOR_PIN2, !left);
 
@@ -127,4 +127,3 @@ void Robot::replayMoves() {
   }
   freeNode(moves);
 }
-

@@ -46,4 +46,3 @@ template<class K, class V> struct item<K, V>* findItemByValue(struct item<K, V>*
   }
   return NULL;
 }
-

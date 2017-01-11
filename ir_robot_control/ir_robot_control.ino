@@ -1,8 +1,8 @@
 #include <IRremote.h>
 
-#include "robot.h"
+#include <robot.h>
+#include <map.h>
 #include "robot_ir.h"
-#include "map.cpp"
 
 /****************************************
  *                                      *
@@ -61,4 +61,3 @@ void loop() {
   }
   delay(ROBOT_DELAY_LOOP);
 }
-

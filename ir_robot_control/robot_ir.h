@@ -9,18 +9,18 @@
 #ifndef robot_ir_h
 #define robot_ir_h
 
-#include "robot.h"
-#include "map.h"
+#include <robot.h>
+#include <map.cpp>
 
 // IR pin
 #define ROBOT_IR_PIN 11
 
-// Sony Bravia TV 
+// Sony Bravia TV
 // note: my Sony Bravia - may differ for other models
 #define ROBOT_REMOTE_SONY 1
 // circuits.io simulator
 #define ROBOT_REMOTE_CIRCUITS_IO 2
-// Philips Mini Tower 
+// Philips Mini Tower
 // note: my Philips Mini Tower - may differ for other models
 #define ROBOT_REMOTE_PHILIPS 3
 
@@ -88,4 +88,3 @@ struct item<unsigned char, unsigned long>* getCodes() {
 }
 
 #endif
-
