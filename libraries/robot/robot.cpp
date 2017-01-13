@@ -79,18 +79,18 @@ void Robot::turn(short deg) {
 }
 
 
-void Robot::execute(unsigned char direction) {
+void Robot::execute(unsigned char code) {
 
-  if (programming) {
+  if (isProgramming() && code != ROBOT_PROGRAMMING) {
     if (moves == NULL) {
-        moves = createNode(direction);
+        moves = createNode(code);
     } else {
-        addNode(moves, direction);
+        addNode(moves, code);
     }
     return;
   }
 
-  switch (direction) {
+  switch (code) {
     case ROBOT_N:
       move(HIGH);
       break;
@@ -114,6 +114,13 @@ void Robot::execute(unsigned char direction) {
       break;
     case ROBOT_SE:
       turn(135);
+      break;
+    case ROBOT_PROGRAMMING:
+      if (!isProgramming()) {
+        startProgramming();
+      } else {
+        endProgramming();
+      }
       break;
   }
   stop();

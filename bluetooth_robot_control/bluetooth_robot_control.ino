@@ -1,8 +1,9 @@
-#include <IRremote.h>
+#include <SoftwareSerial.h>
 
 #include <robot.h>
 #include <map.h>
-#include "robot_ir.h"
+
+#include "robot_bluetooth.h"
 
 /****************************************
  *                                      *
@@ -10,9 +11,9 @@
  *                                      *
  ****************************************/
 
-IRrecv irrecv(ROBOT_IR_PIN);
+SoftwareSerial bluetooth(ROBOT_BT_RX_PIN, ROBOT_BT_TX_PIN);
 Robot robot;
-struct item<unsigned char, unsigned long>* codes = getCodes();
+struct item<unsigned char, int>* codes = getCodes();
 
 /****************************************
  *                                      *
@@ -22,12 +23,7 @@ struct item<unsigned char, unsigned long>* codes = getCodes();
 
 void setup() {
   Serial.begin(9600);
-  irrecv.enableIRIn();
-
-  Serial.println("=======================");
-  Serial.print("Using remote with programming button ");
-  Serial.print(ROBOT_IR_REMOTE_FUNC, HEX);
-  Serial.println();
+  bluetooth.begin(9600);
 
   pinMode(ROBOT_RIGHT_MOTOR_PIN1, OUTPUT);
   pinMode(ROBOT_RIGHT_MOTOR_PIN2, OUTPUT);
@@ -35,17 +31,17 @@ void setup() {
   pinMode(ROBOT_LEFT_MOTOR_PIN1, OUTPUT);
   pinMode(ROBOT_LEFT_MOTOR_PIN2, OUTPUT);
 
-  pinMode(ROBOT_IR_PIN, INPUT);
-
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
-  decode_results results;
-  if (irrecv.decode(&results)) {
-    irrecv.resume();
+  if (bluetooth.available()) {
+    int code = bluetooth.read();
+    if (code == 3) {
+      return;
+    }
 
-    struct item<unsigned char, unsigned long>* item = findItemByValue(codes, results.value);
+    struct item<unsigned char, int>* item = findItemByValue(codes, code);
     if (item != NULL) {
       robot.execute(item->key);
     }
@@ -59,3 +55,4 @@ void loop() {
   }
   delay(ROBOT_DELAY_LOOP);
 }
+

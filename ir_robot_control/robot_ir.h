@@ -84,6 +84,7 @@ struct item<unsigned char, unsigned long>* getCodes() {
   addItem(codes, (unsigned char)(ROBOT_SW), (unsigned long)(ROBOT_IR_REMOTE_7));
   addItem(codes, (unsigned char)(ROBOT_W), (unsigned long)(ROBOT_IR_REMOTE_4));
   addItem(codes, (unsigned char)(ROBOT_NW), (unsigned long)(ROBOT_IR_REMOTE_1));
+  addItem(codes, (unsigned char)(ROBOT_PROGRAMMING), (unsigned long)(ROBOT_IR_REMOTE_FUNC));
   return codes;
 }
 

@@ -29,6 +29,8 @@
 #define ROBOT_SW ROBOT_S | ROBOT_W
 // special direction
 #define ROBOT_NO_MOVE 0
+// marking start/stop of programming
+#define ROBOT_PROGRAMMING 100
 
 // motor 1 pins
 #define ROBOT_RIGHT_MOTOR_PIN1 10
