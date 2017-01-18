@@ -9,6 +9,18 @@
  *                                      *
  ****************************************/
 
+Robot::Robot(bool frontOmniWheel) {
+  this->frontOmniWheel = frontOmniWheel;
+
+  pinMode(ROBOT_RIGHT_MOTOR_PIN1, OUTPUT);
+  pinMode(ROBOT_RIGHT_MOTOR_PIN2, OUTPUT);
+
+  pinMode(ROBOT_LEFT_MOTOR_PIN1, OUTPUT);
+  pinMode(ROBOT_LEFT_MOTOR_PIN2, OUTPUT);
+
+  pinMode(ROBOT_LIGHTS_PIN, OUTPUT);
+}
+
 bool Robot::isProgramming() {
   return programming;
 }
@@ -57,10 +69,18 @@ void Robot::turn(short deg) {
   // turning left:
   // left motor reverses while right one moves forward
   if (deg < 0) {
-    right = HIGH;
+    if (frontOmniWheel) {
+      left = HIGH;
+    } else {
+      right = HIGH;
+    }
     deg = -deg;
   } else {
-    left = HIGH;
+    if (frontOmniWheel) {
+      right = HIGH;
+    } else {
+      left = HIGH;
+    }
   }
 
   unsigned short delayMs = (deg / 90.0) * ROBOT_TURN_LENGHT;
@@ -133,4 +153,12 @@ void Robot::replayMoves() {
     tmp = tmp->next;
   }
   freeNode(moves);
+}
+
+void Robot::turnLightsOn() {
+  digitalWrite(ROBOT_LIGHTS_PIN, HIGH);
+}
+
+void Robot::turnLightsOff() {
+  digitalWrite(ROBOT_LIGHTS_PIN, LOW);
 }

@@ -39,10 +39,15 @@
 #define ROBOT_LEFT_MOTOR_PIN1 5
 #define ROBOT_LEFT_MOTOR_PIN2 3
 
+// lights
+#define ROBOT_LIGHTS_PIN 2
+
 // move lenght in ms
-#define ROBOT_MOVE_LENGHT 4000
+// was 4000
+#define ROBOT_MOVE_LENGHT 1500
 // turn 90 degrees lenght in ms
-#define ROBOT_TURN_LENGHT 650
+// was 650
+#define ROBOT_TURN_LENGHT 350
 // delay lenght in ms
 #define ROBOT_DELAY_LENGHT 20
 // delay in the loop function
@@ -50,12 +55,16 @@
 
 class Robot {
   public:
+    Robot(bool frontOmniWheel);
     bool isProgramming();
     void startProgramming();
     void endProgramming();
     void execute(unsigned char direction);
+    void turnLightsOn();
+    void turnLightsOff();
 
   private:
+    bool frontOmniWheel;
     bool programming;
     struct node<unsigned char>* moves;
     void move(unsigned char forward);

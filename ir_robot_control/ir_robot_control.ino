@@ -2,6 +2,7 @@
 
 #include <robot.h>
 #include <map.h>
+#include <env.h>
 #include "robot_ir.h"
 
 /****************************************
@@ -11,7 +12,7 @@
  ****************************************/
 
 IRrecv irrecv(ROBOT_IR_PIN);
-Robot robot;
+Robot robot = new Robot(false);
 struct item<unsigned char, unsigned long>* codes = getCodes();
 
 /****************************************
@@ -29,18 +30,20 @@ void setup() {
   Serial.print(ROBOT_IR_REMOTE_FUNC, HEX);
   Serial.println();
 
-  pinMode(ROBOT_RIGHT_MOTOR_PIN1, OUTPUT);
-  pinMode(ROBOT_RIGHT_MOTOR_PIN2, OUTPUT);
-
-  pinMode(ROBOT_LEFT_MOTOR_PIN1, OUTPUT);
-  pinMode(ROBOT_LEFT_MOTOR_PIN2, OUTPUT);
-
   pinMode(ROBOT_IR_PIN, INPUT);
 
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
+  unsigned short darkness = analogRead(A0);
+
+  if (Env::isDark(darkness)) {
+    robot.turnLightsOn();
+  } else {
+    robot.turnLightsOff();
+  }
+
   decode_results results;
   if (irrecv.decode(&results)) {
     irrecv.resume();

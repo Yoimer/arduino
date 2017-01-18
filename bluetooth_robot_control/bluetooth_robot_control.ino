@@ -2,6 +2,7 @@
 
 #include <robot.h>
 #include <map.h>
+#include <env.h>
 
 #include "robot_bluetooth.h"
 
@@ -12,7 +13,7 @@
  ****************************************/
 
 SoftwareSerial bluetooth(ROBOT_BT_RX_PIN, ROBOT_BT_TX_PIN);
-Robot robot;
+Robot robot = new Robot(true);
 struct item<unsigned char, int>* codes = getCodes();
 
 /****************************************
@@ -25,16 +26,21 @@ void setup() {
   Serial.begin(9600);
   bluetooth.begin(9600);
 
-  pinMode(ROBOT_RIGHT_MOTOR_PIN1, OUTPUT);
-  pinMode(ROBOT_RIGHT_MOTOR_PIN2, OUTPUT);
-
-  pinMode(ROBOT_LEFT_MOTOR_PIN1, OUTPUT);
-  pinMode(ROBOT_LEFT_MOTOR_PIN2, OUTPUT);
+  Serial.println("=======================");
 
   pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
+
+  unsigned short darkness = analogRead(A0);
+
+  if (Env::isDark(darkness)) {
+    robot.turnLightsOn();
+  } else {
+    robot.turnLightsOff();
+  }
+
   if (bluetooth.available()) {
     int code = bluetooth.read();
     if (code == 3) {
@@ -55,4 +61,3 @@ void loop() {
   }
   delay(ROBOT_DELAY_LOOP);
 }
-
