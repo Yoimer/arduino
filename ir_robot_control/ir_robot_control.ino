@@ -26,18 +26,16 @@ void setup() {
   irrecv.enableIRIn();
 
   Serial.println("=======================");
+
   Serial.print("Using remote with programming button ");
   Serial.print(ROBOT_IR_REMOTE_FUNC, HEX);
   Serial.println();
 
   pinMode(ROBOT_IR_PIN, INPUT);
-
-  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
   unsigned short darkness = analogRead(A0);
-
   if (Env::isDark(darkness)) {
     robot.turnLightsOn();
   } else {
@@ -47,18 +45,11 @@ void loop() {
   decode_results results;
   if (irrecv.decode(&results)) {
     irrecv.resume();
-
     struct item<unsigned char, unsigned long>* item = findItemByValue(codes, results.value);
     if (item != NULL) {
       robot.execute(item->key);
     }
-
-    if (robot.isProgramming()) {
-      digitalWrite(LED_BUILTIN, HIGH);
-    } else {
-      digitalWrite(LED_BUILTIN, LOW);
-    }
-
   }
+
   delay(ROBOT_DELAY_LOOP);
 }

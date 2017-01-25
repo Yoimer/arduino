@@ -31,6 +31,8 @@
 #define ROBOT_NO_MOVE 0
 // marking start/stop of programming
 #define ROBOT_PROGRAMMING 100
+// turning the lights on/off
+#define ROBOT_LIGHTS 101
 
 // motor 1 pins
 #define ROBOT_RIGHT_MOTOR_PIN1 10
@@ -44,7 +46,7 @@
 
 // move lenght in ms
 // was 4000
-#define ROBOT_MOVE_LENGHT 1500
+#define ROBOT_MOVE_LENGHT 2000
 // turn 90 degrees lenght in ms
 // was 650
 #define ROBOT_TURN_LENGHT 350
@@ -60,12 +62,14 @@ class Robot {
     void startProgramming();
     void endProgramming();
     void execute(unsigned char direction);
+    bool areLightsOn();
     void turnLightsOn();
     void turnLightsOff();
 
   private:
     bool frontOmniWheel;
     bool programming;
+    bool lightsOn;
     struct node<unsigned char>* moves;
     void move(unsigned char forward);
     void stop();

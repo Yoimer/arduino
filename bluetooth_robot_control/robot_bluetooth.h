@@ -1,13 +1,11 @@
 /****************************************
  *                                      *
- * IR Remotes                           *
- *                                      *
- * Based on type different codes used   *
+ * Bluetooth Codes                      *
  *                                      *
  ****************************************/
 
-#ifndef robot_ir_h
-#define robot_ir_h
+#ifndef robot_bt_h
+#define robot_bt_h
 
 #include <robot.h>
 #include <map.cpp>
@@ -26,6 +24,7 @@ struct item<unsigned char, int>* getCodes() {
   addItem(codes, (unsigned char)(ROBOT_W), 54);
   addItem(codes, (unsigned char)(ROBOT_NW), 55);
   addItem(codes, (unsigned char)(ROBOT_PROGRAMMING), 56);
+  addItem(codes, (unsigned char)(ROBOT_LIGHTS), 57);
   return codes;
 }
 

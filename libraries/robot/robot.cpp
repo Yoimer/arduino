@@ -19,6 +19,7 @@ Robot::Robot(bool frontOmniWheel) {
   pinMode(ROBOT_LEFT_MOTOR_PIN2, OUTPUT);
 
   pinMode(ROBOT_LIGHTS_PIN, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 bool Robot::isProgramming() {
@@ -26,11 +27,13 @@ bool Robot::isProgramming() {
 }
 
 void Robot::startProgramming() {
-  programming = 1;
+  programming = true;
+  digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void Robot::endProgramming() {
-  programming = 0;
+  programming = false;
+  digitalWrite(LED_BUILTIN, LOW);
   replayMoves();
 }
 
@@ -135,6 +138,13 @@ void Robot::execute(unsigned char code) {
     case ROBOT_SE:
       turn(135);
       break;
+    case ROBOT_LIGHTS:
+      if (!areLightsOn()) {
+        turnLightsOn();
+      } else {
+        turnLightsOff();
+      }
+      break;
     case ROBOT_PROGRAMMING:
       if (!isProgramming()) {
         startProgramming();
@@ -155,10 +165,16 @@ void Robot::replayMoves() {
   freeNode(moves);
 }
 
+bool Robot::areLightsOn() {
+  return lightsOn;
+}
+
 void Robot::turnLightsOn() {
+  lightsOn = true;
   digitalWrite(ROBOT_LIGHTS_PIN, HIGH);
 }
 
 void Robot::turnLightsOff() {
+  lightsOn = false;
   digitalWrite(ROBOT_LIGHTS_PIN, LOW);
 }

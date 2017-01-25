@@ -8,9 +8,9 @@
 #define env_h
 
 // it's sunny
-#define ENV_PHOTO_DIODE_MIN 49
+#define ENV_PHOTO_DIODE_MIN 0
 // it's dark
-#define ENV_PHOTO_DIODE_MAX 964
+#define ENV_PHOTO_DIODE_MAX 1023
 // darkness threshold as percentage from (max - min) range
 #define ENV_DARKNESS_FACTOR 0.8
 

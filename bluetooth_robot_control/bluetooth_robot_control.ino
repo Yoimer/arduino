@@ -25,39 +25,27 @@ struct item<unsigned char, int>* codes = getCodes();
 void setup() {
   Serial.begin(9600);
   bluetooth.begin(9600);
-
   Serial.println("=======================");
-
-  pinMode(LED_BUILTIN, OUTPUT);
 }
 
 void loop() {
-
-  unsigned short darkness = analogRead(A0);
-
-  if (Env::isDark(darkness)) {
-    robot.turnLightsOn();
-  } else {
-    robot.turnLightsOff();
-  }
+//  unsigned short darkness = analogRead(A0);
+//  if (Env::isDark(darkness)) {
+//    robot.turnLightsOn();
+//  } else {
+//    robot.turnLightsOff();
+//  }
 
   if (bluetooth.available()) {
     int code = bluetooth.read();
     if (code == 3) {
       return;
     }
-
     struct item<unsigned char, int>* item = findItemByValue(codes, code);
     if (item != NULL) {
       robot.execute(item->key);
     }
-
-    if (robot.isProgramming()) {
-      digitalWrite(LED_BUILTIN, HIGH);
-    } else {
-      digitalWrite(LED_BUILTIN, LOW);
-    }
-
   }
+
   delay(ROBOT_DELAY_LOOP);
 }
